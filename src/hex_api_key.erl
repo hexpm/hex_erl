@@ -11,15 +11,10 @@
 
 -export_type([permission/0]).
 
--type permission() :: api_permission() | repo_permission() | repos_permission().
 -ifdef(OTP_19).
--type api_permission() :: #{domain := api, resource => read | write}.
--type repo_permission() :: #{domain := repository, resource := binary()}.
--type repos_permission() :: #{domain := repositories}.
+-type permission() :: #{binary() := binary()}.
 -else.
--type api_permission() :: #{domain => api, resource => read | write}.
--type repo_permission() :: #{domain => repository, resource => binary()}.
--type repos_permission() :: #{domain => repositories}.
+-type permission() :: #{binary() => binary()}.
 -endif.
 
 %% @doc
@@ -78,6 +73,12 @@ get(Config, Name) when is_map(Config) and is_binary(Name) ->
 
 %% @doc
 %% Adds a new API or repository key.
+%%
+%% A permission is a map of `#{<<"domain">> => Domain, <<"resource"> => Resource}'.
+%%
+%% Valid `Domain' values: `<<"api">> | <<"repository">> | <<"repositories">>'.
+%%
+%% Valid `Resource' values: `<<"read">> | <<"write">>'.
 %%
 %% Examples:
 %%
